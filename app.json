@@ -1,0 +1,46 @@
+{
+  "name": "alerta-docker-pushover",
+  "description": "Deploy alerta to Heroku",
+  "keywords": [
+    "alerta",
+    "docker",
+    "pushover"
+  ],
+  "website": "http://docs.alerta.io",
+  "repository": "https://github.com/shollingsworth/alerta_heroku_docker",
+  "success_url": "/",
+  "env": {
+    "SECRET_KEY": {
+      "generator": "secret"
+    },
+    "ADMIN_PASSWORD": {
+      "generator": "secret"
+    },
+    "ADMIN_USERS": {
+      "generator": "secret"
+    },
+    "AUTH_REQUIRED": {
+      "description": "Set to true to require authentication for all pages",
+      "value": "1"
+    },
+    "HEARTBEAT_POLL_TIME": {
+      "description": "Poll time for heartbeats (seconds)",
+      "value": "30"
+    },
+    "HOUSE_POLL_TIME": {
+      "description": "Housekeeping poll time (seconds)",
+      "value": "60"
+    },
+    "DEBUG": {
+      "description": "Enable debug logging",
+      "value": "0"
+    },
+    "PLUGINS": {
+      "description": "Initial set of plugins",
+      "value": "reject,blackout,normalise,enhance,pushover"
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
