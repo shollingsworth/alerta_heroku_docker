@@ -1,5 +1,6 @@
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
+
 # After deploy, issue `heroku config:edit` and create in the blanks here, then deploy
 ```
 ADMIN_PASSWORD=random_string
