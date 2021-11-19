@@ -4,4 +4,4 @@ setup:
       as: DATABASE_URL
 build:
   docker:
-    web: alerta.Dockerfile
+    web: Dockerfile

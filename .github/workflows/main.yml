@@ -33,7 +33,7 @@ jobs:
 
           # (Optional, default: "Dockerfile")
           # Dockerfile name.
-          dockerfile_name: alerta.Dockerfile
+          # dockerfile_name: alerta.Dockerfile
 
           # (Optional, default: "")
           # Additional options of docker build command.
