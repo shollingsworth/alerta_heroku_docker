@@ -1,0 +1,27 @@
+version: "2.1"
+services:
+  web:
+    image: alerta-test:latest
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    environment:
+      - SECRET_KEY=1WBhgNHTUvD7Jnh6C
+      - AUTH_REQUIRED=1
+      - LOG_FORMAT=verbose
+      - PORT=5001
+      - DEBUG=1 # remove this line to turn DEBUG off
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/monitoring
+      - ADMIN_KEY=demo-key
+      - PLUGINS=reject,blackout,normalise,enhance,geoip,pushover,acked,alertops,amqp,cachet,dingtalk,enhance,forwarder,heartbeat,influxdb,logstash,mattermost,msteams,op5,opsgenie,pagerduty,prometheus,pubsub,remote_ip,rocketchat,slack,sns,syslog,telegram,timeout,twilio_sms,zabbix
+    restart: always
+  db:
+    image: postgres
+    volumes:
+      - /tmp/pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: monitoring
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
