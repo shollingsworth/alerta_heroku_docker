@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - Dockerfile
+      - entrypoint.sh
+      - heroku.yml
+      - nginx_mod.py
+      - supervisord.conf
 jobs:
   custom-deploy:
     runs-on: ubuntu-latest

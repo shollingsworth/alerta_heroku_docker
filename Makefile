@@ -10,3 +10,6 @@ deploy:
 
 edit:
 	heroku config:edit
+
+local:
+	docker-compose up --force-recreate
