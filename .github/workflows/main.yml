@@ -15,43 +15,31 @@ jobs:
         run: |
           cat > ~/.netrc <<EOF
             machine api.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
             machine git.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
           EOF
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
-      - name: test output
+      - name: create app
+        id: create
         run: |
-          if [[ "${{ secrets.HEROKU_APP_NAME }}-" == "-" ]]; then
-            exit 1
+          if heroku apps:create ${{ secrets.HEROKU_APP_NAME }}; then
+            echo "::set-output name=result::true"
           else
-            echo "OK"
+            echo "::set-output name=result::false"
           fi
-      # - name: create app
-      #   id: create
-      #   run: |
-      #     if heroku apps:create $HEROKU_APP_NAME; then
-      #       echo "::set-output name=result::true"
-      #     else
-      #       echo "::set-output name=result::false"
-      #     fi
-      #
-      # - if: steps.create.outputs.result == 'true'
-      #   name: App Create OK
-      #   run: echo "App Created"
-      #
-      # - if: steps.create.outputs.result == 'false'
-      #   name: App Create Failed
-      #   run: echo "App Failed"
-      #
-      # - name: Add Heroku remote
-      #   run: heroku git:remote -a $HEROKU_APP_NAME
-      #   env:
-      #     HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-      # - name: Push to Heroku
-      #   run: git push heroku HEAD:master
+
+      - if: steps.create.outputs.result == 'true'
+        name: App Create OK
+        run: echo "App Created"
+
+      - if: steps.create.outputs.result == 'false'
+        name: App Create Failed
+        run: echo "App Failed"
+
+      - name: Add Heroku remote
+        run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+      - name: Push to Heroku
+        run: git push heroku HEAD:master
