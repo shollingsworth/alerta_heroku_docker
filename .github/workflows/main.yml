@@ -51,7 +51,6 @@ jobs:
         name: Install Postgres Addon
         run: heroku addons:create heroku-postgresql:hobby-basic --app ${{ secrets.HEROKU_APP_NAME }} --wait
 
-      # - if: steps.already_created.outputs.result == 'false'
       - name: Gen alerta api key
         id: rand_vals
         run: |
