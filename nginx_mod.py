@@ -5,7 +5,7 @@ from pathlib import Path
 import os
 
 print("****************************************")
-print("NGINX Wrapper Starting up")
+print("NGINX MOD Starting up")
 print("****************************************")
 
 PORT = os.environ.get("PORT", "8080")
@@ -22,7 +22,6 @@ def main():
     cont = ALERTA_CONF.read_text()
     cont = cont.replace(":8080", f":{PORT}")
     ALERTA_CONF.write_text(cont)
-    os.system("nginx -c /app/nginx.conf")
 
 
 if __name__ == "__main__":
