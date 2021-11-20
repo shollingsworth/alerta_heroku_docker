@@ -51,11 +51,12 @@ jobs:
         name: Install Postgres Addon
         run: heroku addons:create heroku-postgresql:hobby-basic --app ${{ secrets.HEROKU_APP_NAME }} --wait
 
+      # - if: steps.already_created.outputs.result == 'false'
       - name: Gen alerta api key
         id: rand_vals
         run: |
-          echo "::set-output name=username::$(tr -dc A-Za-z0-9 </dev/urandom | head -c${1:-32})"
-          echo "::set-output name=api_key::$(tr -dc A-Za-z0-9 </dev/urandom | head -c${1:-32})"
+          echo "::set-output name=username::$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c${1:-32})"
+          echo "::set-output name=api_key::$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c${1:-32})"
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set initial Config
