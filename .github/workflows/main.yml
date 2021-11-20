@@ -54,7 +54,9 @@ jobs:
             HEARTBEAT_POLL_TIME=30 \
             HOUSE_POLL_TIME=60 \
             DEBUG=0  \
-            PLUGINS=reject,blackout,normalise,enhance,pushover
+            PLUGINS=reject,blackout,normalise,enhance,pushover \
+            ADMIN_USERS=${{ secrets.ADMIN_USER }} \
+            ADMIN_PASSOWRD=${{ secrets.ADMIN_PASSWORD }}
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set stack to container
