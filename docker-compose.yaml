@@ -1,7 +1,7 @@
-version: "2.1"
+version: "3.3"
 services:
   web:
-    image: alerta-test:latest
+    build: .
     ports:
       - "5001:5001"
     depends_on:
@@ -13,8 +13,13 @@ services:
       - PORT=5001
       - DEBUG=1 # remove this line to turn DEBUG off
       - DATABASE_URL=postgres://postgres:postgres@db:5432/monitoring
-      - ADMIN_KEY=demo-key
-      - PLUGINS=reject,blackout,normalise,enhance,geoip,pushover,acked,alertops,amqp,cachet,dingtalk,enhance,forwarder,heartbeat,influxdb,logstash,mattermost,msteams,op5,opsgenie,pagerduty,prometheus,pubsub,remote_ip,rocketchat,slack,sns,syslog,telegram,timeout,twilio_sms,zabbix
+      - DASHBOARD_URL=http://127.0.0.1:5001
+      - PLUGINS=reject,blackout,normalise,enhance,pushover
+      - HEARTBEAT_POLL_TIME=30
+      - HOUSE_POLL_TIME=60
+      - ADMIN_KEY="FFFFFFFFFFFFFFFFFFFFFFFF"
+      - ADMIN_USERS=tempuser
+      - ALERTA_API_KEY="FFFFFFFFFFFFFFFFFFFFFFFF"
     restart: always
   db:
     image: postgres
