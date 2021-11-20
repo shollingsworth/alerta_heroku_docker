@@ -57,7 +57,8 @@ jobs:
             DEBUG=0  \
             PLUGINS=reject,blackout,normalise,enhance,pushover
 
-      - name: Set stack to container
+      - if: steps.already_created.outputs.result == 'false'
+        name: Set stack to container
         run: heroku stack:set container
 
       - name: Push to Heroku
