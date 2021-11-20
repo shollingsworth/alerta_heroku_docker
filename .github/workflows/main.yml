@@ -1,0 +1,45 @@
+name: Deploy Docker Image to Heroku App
+on:
+  push:
+    branches:
+      - main
+jobs:
+  custom-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
+            machine git.heroku.com
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
+          EOF
+
+      - name: create app
+        id: create
+        run: |
+          if heroku apps:create ${{ secrets.HEROKU_APP_NAME }} --manifest; then
+            echo "::set-output name=result::true"
+          else
+            echo "::set-output name=result::false"
+          fi
+
+      - if: steps.create.outputs.result == 'true'
+        name: App Create OK
+        run: echo "App Created"
+
+      - if: steps.create.outputs.result == 'false'
+        name: App Create Failed
+        run: echo "App Failed"
+
+      - name: Add Heroku remote
+        run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+      - name: Push to Heroku
+        run: git push heroku main:main
