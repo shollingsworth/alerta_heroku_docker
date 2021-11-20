@@ -25,26 +25,33 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
-      - name: create app
-        id: create
+      - name: test output
         run: |
-          if heroku apps:create $HEROKU_APP_NAME; then
-            echo "::set-output name=result::true"
+          if [[ "${HEROKU_APP_NAME}-" == "-" ]]; then
+            exit 1
           else
-            echo "::set-output name=result::false"
+            echo "OK"
           fi
-
-      - if: steps.create.outputs.result == 'true'
-        name: App Create OK
-        run: echo "App Created"
-
-      - if: steps.create.outputs.result == 'false'
-        name: App Create Failed
-        run: echo "App Failed"
-
-      - name: Add Heroku remote
-        run: heroku git:remote -a $HEROKU_APP_NAME
-        env:
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-      - name: Push to Heroku
-        run: git push heroku HEAD:master
+      # - name: create app
+      #   id: create
+      #   run: |
+      #     if heroku apps:create $HEROKU_APP_NAME; then
+      #       echo "::set-output name=result::true"
+      #     else
+      #       echo "::set-output name=result::false"
+      #     fi
+      #
+      # - if: steps.create.outputs.result == 'true'
+      #   name: App Create OK
+      #   run: echo "App Created"
+      #
+      # - if: steps.create.outputs.result == 'false'
+      #   name: App Create Failed
+      #   run: echo "App Failed"
+      #
+      # - name: Add Heroku remote
+      #   run: heroku git:remote -a $HEROKU_APP_NAME
+      #   env:
+      #     HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      # - name: Push to Heroku
+      #   run: git push heroku HEAD:master
