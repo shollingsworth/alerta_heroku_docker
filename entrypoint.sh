@@ -5,9 +5,20 @@ set -ex
 
 env | sort
 
+INIT=0
+
 ###############################
-# BEGIN CUSTOM
-python3 /app/nginx_mod.py
+# BEGIN CUSTOM (added port)
+# Generate minimal client config, if not supplied
+if [ ! -f "${ALERTA_CONF_FILE}" ]; then
+  python3 /app/nginx_mod.py
+  export INIT=1
+  echo "# Create client configuration file."
+  cat >${ALERTA_CONF_FILE} << EOF
+[DEFAULT]
+endpoint = http://localhost:${PORT}/api
+EOF
+fi
 # END CUSTOM
 ###############################
 
@@ -38,14 +49,8 @@ if [ -n "${ADMIN_USERS}" ]; then
   fi
 fi
 
-# Generate minimal client config, if not supplied
-if [ ! -f "${ALERTA_CONF_FILE}" ]; then
-  echo "# Create client configuration file."
-  cat >${ALERTA_CONF_FILE} << EOF
-[DEFAULT]
-endpoint = http://localhost:8080/api
-EOF
 
+if [ "${INIT}" -eq 1 ]; then
   # Add API key to client config, if required
   if [ "${AUTH_REQUIRED,,}" == "true" ]; then
     echo "# Auth enabled; add admin API key to client configuration."
