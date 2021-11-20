@@ -61,5 +61,8 @@ jobs:
         name: Set stack to container
         run: heroku stack:set container
 
+      - name: Add remote
+        run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+
       - name: Push to Heroku
-        run: git push heroku main:main
+        run: git push heroku HEAD:main
