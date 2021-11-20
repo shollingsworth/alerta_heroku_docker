@@ -42,9 +42,7 @@ jobs:
 
       - if: steps.addons_exist.outputs.result == 'false'
         name: Install Postgres Addon
-        run: heroku addons:create heroku-postgresql:hobby-basic \
-          -a ${{ secrets.HEROKU_APP_NAME }} \
-          --wait
+        run: heroku addons:create heroku-postgresql:hobby-basic --app ${{ secrets.HEROKU_APP_NAME }} --wait
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set initial Config
