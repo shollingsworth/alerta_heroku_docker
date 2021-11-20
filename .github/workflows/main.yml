@@ -28,7 +28,7 @@ jobs:
       - name: create app
         id: create
         run: |
-          if heroku create $HEROKU_APP_NAME --manifest; then
+          if heroku create $HEROKU_APP_NAME; then
             echo "::set-output name=result::true"
           else
             echo "::set-output name=result::false"
