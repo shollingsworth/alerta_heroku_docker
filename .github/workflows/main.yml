@@ -31,6 +31,7 @@ jobs:
             echo "::set-output name=result::true"
           fi
 
+
       - name: check addons
         id: addons_exist
         run: |
@@ -44,17 +45,24 @@ jobs:
         name: Install Postgres Addon
         run: heroku addons:create heroku-postgresql:hobby-basic --app ${{ secrets.HEROKU_APP_NAME }} --wait
 
+      - name: Gen alerta api key
+        id: rand_vals
+        run: |
+          echo "::set-output name=username::$(tr -dc A-Za-z0-9 </dev/urandom | head -c${1:-32})"
+          echo "::set-output name=api_key::$(tr -dc A-Za-z0-9 </dev/urandom | head -c${1:-32})"
+
       - if: steps.already_created.outputs.result == 'false'
         name: Set initial Config
         run: |
           heroku config:set -a ${{ secrets.HEROKU_APP_NAME }} \
+            DEBUG=0  \
             AUTH_REQUIRED=1 \
             HEARTBEAT_POLL_TIME=30 \
             HOUSE_POLL_TIME=60 \
-            DEBUG=0  \
             PLUGINS=reject,blackout,normalise,enhance,pushover \
-            ADMIN_USERS=${{ secrets.ADMIN_USER }} \
-            ADMIN_PASSOWRD=${{ secrets.ADMIN_PASSWORD }}
+            ADMIN_USERS=${{ steps.rand_vals.outputs.username }} \
+            ADMIN_KEY=${{ steps.rand_vals.outputs.api_key }} \
+            ALERTA_API_KEY=${{ steps.rand_vals.outputs.api_key }}
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set stack to container
