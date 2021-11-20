@@ -35,14 +35,17 @@ jobs:
         id: addons_exist
         run: |
           if heroku addons --app ${{ secrets.HEROKU_APP_NAME }}; then
-            echo "::set-output name=result::false"
-          else
             echo "::set-output name=result::true"
+          else
+            echo "::set-output name=result::false"
           fi
 
       - if: steps.addons_exist.outputs.result == 'false'
         name: Install Postgres Addon
-        run: heroku addons:create heroku-postgresql:hobby-basic --as=DATABASE_URL --wait
+        run: heroku addons:create heroku-postgresql:hobby-basic \
+          --as=DATABASE_URL \
+          -a ${{ secrets.HEROKU_APP_NAME }} \
+          --wait
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set initial Config
