@@ -23,24 +23,36 @@ jobs:
           EOF
 
       - name: create app
-        id: create
+        id: already_created
         run: |
-          if heroku create ${{ secrets.HEROKU_APP_NAME }} --manifest; then
-            echo "::set-output name=result::true"
-          else
+          if heroku create ${{ secrets.HEROKU_APP_NAME }}; then
             echo "::set-output name=result::false"
+          else
+            echo "::set-output name=result::true"
           fi
 
-      - if: steps.create.outputs.result == 'true'
-        name: App Create OK
-        run: echo "App Created"
+      - name: check addons
+        id: addons_exist
+        run: |
+          if heroku addons --app ${{ secrets.HEROKU_APP_NAME }}; then
+            echo "::set-output name=result::false"
+          else
+            echo "::set-output name=result::true"
+          fi
 
-      - if: steps.create.outputs.result == 'false'
-        name: App Create Failed
-        run: echo "App Failed"
+      - if: steps.addons_exist.outputs.result == 'false'
+        name: Install Postgres Addon
+        run: heroku addons:create heroku-postgresql:hobby-basic --as=DATABASE_URL --wait
 
-      - name: Add Heroku remote
-        run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+      - if: steps.already_created.outputs.result == 'false'
+        name: Set initial Config
+        run: |
+          heroku config:set -a ${{ secrets.HEROKU_APP_NAME }} \
+            AUTH_REQUIRED=1 \
+            HEARTBEAT_POLL_TIME=30 \
+            HOUSE_POLL_TIME=60 \
+            DEBUG=0  \
+            PLUGINS=reject,blackout,normalise,enhance,pushover
 
       - name: Set stack to container
         run: heroku stack:set container
