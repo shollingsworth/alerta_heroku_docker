@@ -43,7 +43,6 @@ jobs:
       - if: steps.addons_exist.outputs.result == 'false'
         name: Install Postgres Addon
         run: heroku addons:create heroku-postgresql:hobby-basic \
-          --as=DATABASE_URL \
           -a ${{ secrets.HEROKU_APP_NAME }} \
           --wait
 
