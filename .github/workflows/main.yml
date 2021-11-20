@@ -20,6 +20,7 @@ jobs:
             machine git.heroku.com
               login $HEROKU_EMAIL
               password $HEROKU_API_KEY
+          cat ~/.netc
           EOF
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
