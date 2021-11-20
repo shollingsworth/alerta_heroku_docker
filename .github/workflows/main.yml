@@ -55,8 +55,8 @@ jobs:
       - name: Gen alerta api key
         id: rand_vals
         run: |
-          echo "::set-output name=username::$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c${1:-32})"
-          echo "::set-output name=api_key::$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c${1:-32})"
+          echo "::set-output name=username::$(openssl rand -hex 20)"
+          echo "::set-output name=api_key::$(openssl rand -hex 20)"
 
       - if: steps.already_created.outputs.result == 'false'
         name: Set initial Config
