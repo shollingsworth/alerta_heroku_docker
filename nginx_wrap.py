@@ -4,6 +4,10 @@
 from pathlib import Path
 import os
 
+print("****************************************")
+print("NGINX Wrapper Starting up")
+print("****************************************")
+
 PORT = os.environ.get("PORT", "8080")
 WEBFILE = Path("/app/nginx.conf")
 ALERTA_CONF = Path("/app/alerta.conf")
