@@ -10,8 +10,8 @@ INIT=0
 ###############################
 # BEGIN CUSTOM (added port)
 # Generate minimal client config, if not supplied
+sed -i "s/8080/${PORT}/g" /app/nginx.conf
 if [ ! -f "${ALERTA_CONF_FILE}" ]; then
-  python3 /app/nginx_mod.py
   export INIT=1
   echo "# Create client configuration file."
   cat >${ALERTA_CONF_FILE} << EOF
