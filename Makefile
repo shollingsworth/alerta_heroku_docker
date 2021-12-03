@@ -12,4 +12,5 @@ edit:
 	heroku config:edit
 
 local:
-	docker-compose up --force-recreate
+	docker-compose up  \
+		--build
