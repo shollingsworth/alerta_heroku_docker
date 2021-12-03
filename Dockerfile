@@ -1,4 +1,4 @@
-FROM alerta/alerta-web:8.5.0
+FROM alerta/alerta-web:8.6.2
 
 USER root
 

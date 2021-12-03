@@ -8,7 +8,8 @@ services:
       - db
     environment:
       - SECRET_KEY=1WBhgNHTUvD7Jnh6C
-      - AUTH_REQUIRED=1
+      # DO NOT HAVE THIS SET TO ZERO, LOCAL TESTING ONLY
+      - AUTH_REQUIRED="0"
       - LOG_FORMAT=verbose
       - PORT=5001
       - DEBUG=1 # remove this line to turn DEBUG off
